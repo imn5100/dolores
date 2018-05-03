@@ -5,7 +5,6 @@ import com.shaw.dolores.annotation.OAuthPassport;
 import com.shaw.dolores.bo.User;
 import com.shaw.dolores.utils.Constants;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,15 +17,14 @@ public class IndexController {
     @OAuthPassport
     public ModelAndView loginPage(HttpSession session) {
         User user = (User) session.getAttribute(Constants.HTTP_SESSION_USER);
-//        if (user != null && user.getId() != null) {
-//            ModelAndView mav = new ModelAndView("redirect:" + "/home");
-//            return mav;
-//        }
+        if (user != null && user.getId() != null) {
+            return new ModelAndView("redirect:" + "/home");
+        }
         return new ModelAndView("login");
     }
 
-    @RequestMapping(value = "/{page}", method = RequestMethod.GET)
-    public ModelAndView loginPage(@PathVariable String page) {
-        return new ModelAndView(page);
+    @RequestMapping(value = "/ws_test", method = RequestMethod.GET)
+    public ModelAndView webSocketPage() {
+        return new ModelAndView("ws_test");
     }
 }
