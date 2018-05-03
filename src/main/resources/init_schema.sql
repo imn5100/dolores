@@ -9,9 +9,10 @@ CREATE TABLE meta
     owner INTEGER DEFAULT 0 NOT NULL,
     create_time bigint DEFAULT 0 NOT NULL,
     update_time bigint DEFAULT 0 NOT NULL,
-    expire_time bigint DEFAULT 0 NOT NULL
+    expire_time bigint DEFAULT 0 NOT NULL,
+    status tinyint DEFAULT 0 NOT NULL
 );
-CREATE INDEX idx_name ON meta (name);
+CREATE UNIQUE INDEX idx_name ON meta (name);
 
 DROP TABLE IF EXISTS user;
 create table user

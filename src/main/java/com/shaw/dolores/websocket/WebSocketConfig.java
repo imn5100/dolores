@@ -1,11 +1,7 @@
 package com.shaw.dolores.websocket;
 
-import com.alibaba.fastjson.JSON;
-import com.shaw.dolores.utils.Constants;
-import com.shaw.dolores.vo.SessionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.CloseStatus;
@@ -18,8 +14,6 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
-import java.util.Date;
-
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
@@ -28,14 +22,12 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Autowired
     private HttpHandshakeInterceptor httpHandshakeInterceptor;
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-    @Autowired
     private SubscribeChannelInterceptor subscribeChannelInterceptor;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/dolores");
-        config.setApplicationDestinationPrefixes("/app");
+        config.setApplicationDestinationPrefixes("/dolores");
     }
 
     @Override
@@ -64,10 +56,6 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                     @Override
                     public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
                         sessionHandler.register(session);
-                        SessionData sessionData = (SessionData) session.getAttributes().get(Constants.TOKEN_DATA);
-                        stringRedisTemplate.opsForValue().set(sessionData.getSessionId(), JSON.toJSONString(sessionData));
-                        stringRedisTemplate.expireAt(sessionData.getSessionId(), new Date(sessionData.getExpireTime()));
-                        session.getAttributes().remove(Constants.TOKEN_DATA);
                         super.afterConnectionEstablished(session);
                     }
 

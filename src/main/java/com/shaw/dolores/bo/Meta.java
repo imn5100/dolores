@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit;
 @Entity
 @Data
 public class Meta implements Serializable {
+    public static final int STATUS_INIT = 0;
+    public static final int STATUS_USED = 1;
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
@@ -28,6 +31,8 @@ public class Meta implements Serializable {
     private long updateTime;
     @Column(name = "expire_time")
     private long expireTime;
+
+    private int status = STATUS_INIT;
 
 
     public static Meta of(String key, String value, int owner, long expireTime, TimeUnit timeUnit) {

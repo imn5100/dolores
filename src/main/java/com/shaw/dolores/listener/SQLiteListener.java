@@ -32,7 +32,7 @@ public class SQLiteListener implements ApplicationListener<ApplicationPreparedEv
     }
 
 
-    public static Properties importSql(String databaseName) throws IOException, SQLException {
+    private static Properties importSql(String databaseName) throws IOException, SQLException {
         Properties props = new Properties();
         try {
             String path = System.getProperty("user.dir") + "/" + databaseName;

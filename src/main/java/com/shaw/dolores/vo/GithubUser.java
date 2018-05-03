@@ -117,6 +117,8 @@ public class GithubUser implements Serializable {
         visitor.setOauthFrom(User.OAUTH_FROM_GITHUB);
         visitor.setThirdId(String.valueOf(id));
         visitor.setMoreInfo(moreInfo);
+        visitor.setCreateTime(System.currentTimeMillis());
+        visitor.setUpdateTime(System.currentTimeMillis());
         return visitor;
     }
 }

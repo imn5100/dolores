@@ -28,7 +28,7 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
             String token = servletRequest.getServletRequest().getParameter("token");
-            Meta meta = metaRepository.findMetaByNameAndExpireTimeAfter(token, System.currentTimeMillis());
+            Meta meta = metaRepository.findOneMetaByNameAndValid(token, System.currentTimeMillis());
             if (meta == null || Utils.isEmpty(meta.getValue())) {
                 response.setStatusCode(HttpStatus.BAD_REQUEST);
                 return false;
@@ -52,6 +52,6 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
                                Exception ex) {
         ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
         String token = servletRequest.getServletRequest().getParameter("token");
-        metaRepository.deleteByName(token);
+        metaRepository.updateMetaStatusByName(token, Meta.STATUS_USED);
     }
 }

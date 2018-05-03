@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <title>Spring Boot Demo</title>
+</head>
+<body>
+<p id="title" th:text="${session.http_session_user!=null}?(${session.http_session_user.account}):('not login')"></p>
+
+<a href="/user/fromGithub?redirect=http://wst.shawblog.me/login/">login from github</a>
+<script>
+</script>
+</body>
+</html>

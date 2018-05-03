@@ -32,26 +32,11 @@ public class DoloresApplicationTests {
     }
 
     @Test
-    public void testMetaDelete() {
-        Meta meta = new Meta();
-        meta.setName("test2");
-        meta.setCreateTime(System.currentTimeMillis());
-        meta.setUpdateTime(System.currentTimeMillis());
-        meta.setValue(String.valueOf(System.currentTimeMillis()));
-        meta.setExpireTime(System.currentTimeMillis() + 60 * 1000);
-        metaRepository.save(meta);
-
-        meta = metaRepository.findMetaByNameAndExpireTimeAfter("test2", System.currentTimeMillis());
-        System.out.println(meta);
-        metaRepository.deleteByName("test2");
-    }
-
-    @Test
     public void testFindMeta() throws InterruptedException {
         boolean roll = true;
         while (roll) {
             long current = System.currentTimeMillis();
-            Meta meta = metaRepository.findMetaByNameAndExpireTimeAfter("test", current);
+            Meta meta = metaRepository.findOneMetaByNameAndValid("test2", current);
             System.out.println(current);
             System.out.println(meta);
             if (meta == null) {

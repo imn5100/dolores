@@ -1,7 +1,6 @@
 package com.shaw.dolores.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.shaw.dolores.annotation.OAuthPassport;
 import com.shaw.dolores.bo.Meta;
 import com.shaw.dolores.bo.User;
 import com.shaw.dolores.dao.MetaRepository;
@@ -10,10 +9,7 @@ import com.shaw.dolores.vo.SessionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -31,12 +27,12 @@ public class UserController {
     @Value("${dolores.subscribe.prefix}")
     private String subPrefix;
     private static final String DEFAULT_SCOPE = "";
-    private static final String GITHUB_AUTHORIZE_URL = "http://github.com/login/oauth/authorize";
+    private static final String GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize";
     @Autowired
     private MetaRepository metaRepository;
 
 
-    @RequestMapping("/fromGithub")
+    @RequestMapping(value = "/fromGithub", method = RequestMethod.GET)
     public ModelAndView loginByGithub(@RequestParam(name = "redirect") String redirect, HttpSession session) throws Exception {
         ModelAndView mav = new ModelAndView();
         User user = (User) session.getAttribute(Constants.HTTP_SESSION_USER);
@@ -55,9 +51,7 @@ public class UserController {
 
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     @ResponseBody
-    @OAuthPassport
-    public ResponseDataholder getConnectToken(HttpSession session, String driverId) {
-        User user = (User) session.getAttribute(Constants.HTTP_SESSION_USER);
+    public ResponseDataholder getConnectToken(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user, String driverId) {
         if (user != null && user.getId() != null && Utils.isNotEmpty(driverId)) {
             if (metaRepository.countByOwnerAndExpireTimeAfter(user.getId(), System.currentTimeMillis()) > Constants.MAX_TOKEN) {
                 return ResponseDataholder.fail(ResponseCode.TRY_LATER);
@@ -66,13 +60,14 @@ public class UserController {
             String sessionId = Utils.generateSessionId();
             String token = Utils.generateToken();
             sessionData.setToken(token);
-            sessionData.setTopicList(Collections.singletonList(subPrefix + driverId));
+            sessionData.setTopicList(Collections.singletonList(Utils.buildSubscribeUrl(subPrefix, driverId, user.getId())));
             sessionData.setSessionId(sessionId);
             sessionData.setUserName(user.getName());
-            Meta meta = Meta.of(Utils.generateToken(), JSON.toJSONString(session), user.getId(), 5, TimeUnit.MINUTES);
+            Meta meta = Meta.of(token, JSON.toJSONString(sessionData), user.getId(), 5, TimeUnit.MINUTES);
             metaRepository.save(meta);
-            return ResponseDataholder.success(session);
+            return ResponseDataholder.success(sessionData);
         }
         return ResponseDataholder.fail(ResponseCode.NOT_LOGIN);
     }
+
 }

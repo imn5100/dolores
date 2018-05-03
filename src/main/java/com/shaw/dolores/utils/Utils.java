@@ -64,16 +64,8 @@ public final class Utils {
         return !StringUtils.isEmpty(topic) && !CollectionUtils.isEmpty(topicWhitelists) && topicWhitelists.stream().anyMatch(pattern -> pathMatcher.match(pattern, topic));
     }
 
-    public static String getCurrentClassPath() {
-        URL url = DoloresApplication.class.getResource("/");
-        String path;
-        if (null == url) {
-            File f = new File(DoloresApplication.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            path = f.getPath();
-        } else {
-            path = url.getPath();
-        }
-
-        return System.getProperties().getProperty("os.name").toLowerCase().contains("win") ? path.replaceFirst("^/(.:/)", "$1") : path;
+    public static String buildSubscribeUrl(String subPrefix, String driverId, int userId) {
+        return subPrefix + userId + "/" + driverId;
     }
+
 }
