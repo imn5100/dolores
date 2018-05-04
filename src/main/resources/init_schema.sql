@@ -31,5 +31,16 @@ create table user
   unique (account, oauth_from)
 );
 
+DROP TABLE IF EXISTS device;
+create table device
+(
+  id   varchar(32) default ''  not null,
+  user_id     varchar(64) default ''  not null,
+  name        varchar(64) default ''  not null,
+  create_time bigint default '0'      not null,
+  update_time bigint default '0'      not null,
+  unique (id)
+);
+
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

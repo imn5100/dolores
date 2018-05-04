@@ -1,46 +1,89 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-    <meta name="description" content="Bootstrap Admin App + jQuery"/>
-    <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin"/>
-    <title>WST Login</title>
-    <link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}"/>
-    <link rel="stylesheet" th:href="@{/vendor/simple-line-icons/css/simple-line-icons.css}"/>
-    <link rel="stylesheet" th:href="@{/media/css/bootstrap.css}"/>
-    <link rel="stylesheet" th:href="@{/media/css/app.css}"/>
-    <link rel="stylesheet" th:href="@{/media/css/theme-i.css}"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="shortcut icon" href="/images/favicon.png"/>
+    <title>Dolores - 用户登录</title>
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.css" rel="stylesheet"/>
+    <link href="/css/style.min.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        body, html {
+            background: url("/images/bg/5.png") no-repeat;
+            background-size: cover;
+        }
+
+        .panel-shadow {
+            -moz-box-shadow: 0px 0px 10px 0px rgba(39, 49, 65, 0.1);
+            -webkit-box-shadow: 0px 0px 10px 0px rgba(39, 49, 65, 0.1);
+            box-shadow: 0px 0px 10px 0px rgba(39, 49, 65, 0.1);
+        }
+
+        .bg-overlay {
+            -moz-border-radius: 6px 6px 0 0;
+            -webkit-border-radius: 6px 6px 0 0;
+            background-color: rgba(47, 51, 62, 0.3);
+            border-radius: 6px 6px 0 0;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        .input-border {
+            font-size: 14px;
+            width: 100%;
+            height: 40px;
+            border-radius: 0;
+            border: none;
+        }
+
+        .bg-img > h3 {
+            text-shadow: 0px 2px 3px #555;
+            color: #cac9c8;
+        }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
 </head>
 <body>
-<div class="wrapper">
-    <div class="block-center mt-xl wd-xl">
-        <div class="panel panel-dark panel-flat">
-            <div class="panel-heading text-center">
-                <a href="/index">
-                    <img src="/img/logo.png" alt="Image" class="block-center img-rounded"/>
-                </a>
-            </div>
-            <div class="panel-body" id="loginPage">
-                <p class="text-center pv">登录</p>
-                <p class="pt-lg text-center">登录仅获取github公开信息</p>
-                <div class="text-center">
-                    <a href="/user/fromGithub?redirect=http://wst.shawblog.me/home/">
-                     <span class="fa-stack fa-2x mr"> <i class="fa fa-circle-thin fa-stack-2x"></i> <i
-                             class="fa fa-github fa-stack-1x"></i>
-                     </span>
-                    </a>
+
+<div style="margin: 0 auto; padding-bottom: 0%; padding-top: 7.5%; width: 380px;">
+    <div class="panel panel-color panel-danger panel-pages panel-shadow">
+        <div class="panel-heading bg-img">
+            <div class="bg-overlay"></div>
+            <h3 class="text-center m-t-10"> Login Dolores</h3>
+        </div>
+
+        <div class="panel-body">
+            <form class="form-horizontal m-t-20" method="post" id="loginForm">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <text class="input-lg input-border">Github登录只获取Github的公开信息</text>
+                    </div>
                 </div>
-                <p></p>
-            </div>
+
+                <div class="form-group text-center m-t-40">
+                    <div class="col-xs-12">
+                        <a class="btn btn-danger btn-lg btn-rounded btn-block w-lg waves-effect waves-light" href="/fromGithub?redirect=http://wst.shawblog.me/login"
+                           style="box-shadow: 0px 0px 4px #868282;" type="submit">Github<i class="fa fa-github" aria-hidden="true"></i>&nbsp;登&nbsp;录
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="p-lg text-center">
-            <span>&copy;</span>
-            <span>2018</span>
-            <br/>
-            <span>imn5100_chu2@qq.com</span>
-        </div>
+
     </div>
 </div>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.js"></script>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </html>
