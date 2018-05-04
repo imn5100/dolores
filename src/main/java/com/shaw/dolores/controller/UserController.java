@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.shaw.dolores.bo.Device;
 import com.shaw.dolores.bo.Meta;
 import com.shaw.dolores.bo.User;
+import com.shaw.dolores.dao.DeviceRepository;
 import com.shaw.dolores.dao.MetaRepository;
 import com.shaw.dolores.utils.Constants;
 import com.shaw.dolores.utils.ResponseCode;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author imn5100
@@ -32,6 +35,8 @@ public class UserController {
     private String subPrefix;
     @Autowired
     private MetaRepository metaRepository;
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView home() {
@@ -41,9 +46,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/devices", method = RequestMethod.GET)
-    public ModelAndView devices() {
+    public ModelAndView devices(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user) {
         ModelAndView mav = new ModelAndView("devices");
+        List<Device> devices = deviceRepository.findAllByUserId(user.getId());
         mav.addObject("active", "devices");
+        mav.addObject("devices", devices.stream().map(device -> device.convertToVo(user)).collect(Collectors.toList()));
         return mav;
     }
 

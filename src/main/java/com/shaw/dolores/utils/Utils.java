@@ -1,13 +1,10 @@
 package com.shaw.dolores.utils;
 
-import com.shaw.dolores.DoloresApplication;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Collection;
 
