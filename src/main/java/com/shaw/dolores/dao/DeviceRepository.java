@@ -12,4 +12,9 @@ import java.util.List;
 public interface DeviceRepository extends PagingAndSortingRepository<Device, Integer> {
     List<Device> findAllByUserId(int userId);
 
+
+    Device findByIdAndUserId(String id, int userId);
+
+    int countByUserId(int userId);
+
 }

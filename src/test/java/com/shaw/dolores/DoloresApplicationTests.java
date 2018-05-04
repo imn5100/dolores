@@ -2,6 +2,8 @@ package com.shaw.dolores;
 
 import com.shaw.dolores.bo.Meta;
 import com.shaw.dolores.dao.MetaRepository;
+import com.shaw.dolores.utils.DesUtils;
+import com.shaw.dolores.utils.GidUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,15 @@ public class DoloresApplicationTests {
             }
             Thread.sleep(1000);
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        int i = 10;
+        while (i > 0) {
+            System.out.println(DesUtils.getDefaultInstance().encrypt((String.valueOf(GidUtil.next()))));
+            i--;
+        }
+
     }
 
 

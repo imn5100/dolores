@@ -6,10 +6,7 @@ import com.shaw.dolores.bo.Meta;
 import com.shaw.dolores.bo.User;
 import com.shaw.dolores.dao.DeviceRepository;
 import com.shaw.dolores.dao.MetaRepository;
-import com.shaw.dolores.utils.Constants;
-import com.shaw.dolores.utils.ResponseCode;
-import com.shaw.dolores.utils.ResponseDataholder;
-import com.shaw.dolores.utils.Utils;
+import com.shaw.dolores.utils.*;
 import com.shaw.dolores.vo.SessionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,9 +36,11 @@ public class UserController {
     private DeviceRepository deviceRepository;
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public ModelAndView home() {
+    public ModelAndView home(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user) {
         ModelAndView mav = new ModelAndView("home");
+        int deviceCount = deviceRepository.countByUserId(user.getId());
         mav.addObject("active", "home");
+        mav.addObject("deviceCount", deviceCount);
         return mav;
     }
 
@@ -57,9 +56,39 @@ public class UserController {
 
     @RequestMapping(value = "/devices/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseDataholder devicesAdd(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user, String deviceName) {
-
+    public ResponseDataholder devicesAdd(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user, String id, String deviceName) throws Exception {
+        Device device;
+        if (Utils.isNotEmpty(id)) {
+            device = deviceRepository.findByIdAndUserId(id, user.getId());
+            if (device == null) {
+                return ResponseDataholder.fail(ResponseCode.ID_WRONG);
+            }
+        } else {
+            device = new Device();
+            device.setId(DesUtils.getDefaultInstance().encrypt(String.valueOf(GidUtil.next())));
+            device.setCreateTime(System.currentTimeMillis());
+            device.setUserId(user.getId());
+        }
+        device.setName(deviceName);
+        device.setUpdateTime(System.currentTimeMillis());
+        deviceRepository.save(device);
         return ResponseDataholder.success();
+    }
+
+    @RequestMapping(value = "/devices/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataholder devicesDelete(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user, String id) {
+        if (Utils.isNotEmpty(id)) {
+            Device device = deviceRepository.findByIdAndUserId(id, user.getId());
+            if (device == null) {
+                return ResponseDataholder.fail(ResponseCode.ID_WRONG);
+            } else {
+                deviceRepository.delete(device);
+                return ResponseDataholder.success();
+            }
+        } else {
+            return ResponseDataholder.fail(ResponseCode.ID_WRONG);
+        }
     }
 
     @RequestMapping(value = "/token", method = RequestMethod.POST)

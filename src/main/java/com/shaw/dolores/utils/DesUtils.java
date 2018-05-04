@@ -15,24 +15,28 @@ public class DesUtils {
     private static DesUtils INSTANCE;
 
 
-    public static DesUtils getDefaultInstance() throws Exception {
+    public static DesUtils getDefaultInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DesUtils();
         }
         return INSTANCE;
     }
 
-    public DesUtils() throws Exception {
+    public DesUtils() {
         this(defaultSecretKey);
     }
 
-    public DesUtils(String secretKey) throws Exception {
+    public DesUtils(String secretKey) {
         Key key;
-        key = getKey(secretKey.getBytes());
-        encryptCipher = Cipher.getInstance("DES");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, key);
-        decryptCipher = Cipher.getInstance("DES");
-        decryptCipher.init(Cipher.DECRYPT_MODE, key);
+        try {
+            key = getKey(secretKey.getBytes());
+            encryptCipher = Cipher.getInstance("DES");
+            encryptCipher.init(Cipher.ENCRYPT_MODE, key);
+            decryptCipher = Cipher.getInstance("DES");
+            decryptCipher.init(Cipher.DECRYPT_MODE, key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String encrypt(String strIn) throws Exception {

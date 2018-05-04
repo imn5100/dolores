@@ -34,7 +34,7 @@ create table user
 DROP TABLE IF EXISTS device;
 create table device
 (
-  id   varchar(32) default ''  not null,
+  id          varchar(64) default ''  not null,
   user_id     varchar(64) default ''  not null,
   name        varchar(64) default ''  not null,
   create_time bigint default '0'      not null,
