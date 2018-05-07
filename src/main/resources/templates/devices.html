@@ -1,80 +1,84 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:replace="header :: header">Header</div>
-
-<div class="content-page">
-    <div class="content">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h4 class="page-title">设备管理</h4>
+<body>
+<header th:replace="header_file :: header_file">header_file</header>
+<div id="wrapper" class="fixed-left">
+    <div th:replace="header :: header">Header</div>
+    <div class="content-page">
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="page-title">设备管理</h4>
+                    </div>
                 </div>
-            </div>
 
-            <div class="pull-right">
-                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveModal">添加新设备</button>
-            </div>
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>设备Id</th>
-                    <th>设备名称</th>
-                    <th>创建人</th>
-                    <th width="20%">创建时间</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
+                <div class="pull-right">
+                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveModal">添加新设备</button>
+                </div>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>设备Id</th>
+                        <th>设备名称</th>
+                        <th>创建人</th>
+                        <th width="20%">创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                <tr th:each="device,iterStat : ${devices}">
-                    <th th:text="${device.id}"></th>
-                    <th th:text="${device.name}"></th>
-                    <th th:text="${device.user}"></th>
-                    <td th:text="${device.createTime}"></td>
-                    <td>
-                        <a class="btn btn-primary btn-sm waves-effect waves-light m-b-5"
-                           th:onclick="${'showModal('''+device.id+''',''' + device.name+ ''')'}">
-                            <i class="fa fa-edit"></i>
-                            <span>编辑</span></a>
-                        <a href="javascript:void(0)" th:onclick="${'delPost('''+device.id+''')'}"
-                           class="btn btn-danger btn-sm waves-effect waves-light m-b-5"><i
-                                class="fa fa-trash-o"></i> <span>删除</span></a>
-                        <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5"><i
-                                class="fa fa-rocket" th:onclick="${'getToken('''+device.id+''')'}"></i>
-                            <span>获取设备连接码</span></a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                    <tr th:each="device,iterStat : ${devices}">
+                        <th th:text="${device.id}"></th>
+                        <th th:text="${device.name}"></th>
+                        <th th:text="${device.user}"></th>
+                        <td th:text="${device.createTime}"></td>
+                        <td>
+                            <a class="btn btn-primary btn-sm waves-effect waves-light m-b-5"
+                               th:onclick="${'showModal('''+device.id+''',''' + device.name+ ''')'}">
+                                <i class="fa fa-edit"></i>
+                                <span>编辑</span></a>
+                            <a href="javascript:void(0)" th:onclick="${'delPost('''+device.id+''')'}"
+                               class="btn btn-danger btn-sm waves-effect waves-light m-b-5"><i
+                                    class="fa fa-trash-o"></i> <span>删除</span></a>
+                            <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5"><i
+                                    class="fa fa-rocket" th:onclick="${'getToken('''+device.id+''')'}"></i>
+                                <span>获取设备连接码</span></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">添加设备</h4>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" value="" id="id"/>
-                <div class="form-group">
-                    <label for="name">名称</label>
-                    <input type="text" class="form-control" id="name" placeholder="请输入名称"/>
+    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">添加设备</h4>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" value="" onclick="addOrUpdate()">保存</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
+                <div class="modal-body">
+                    <input type="hidden" value="" id="id"/>
+                    <div class="form-group">
+                        <label for="name">名称</label>
+                        <input type="text" class="form-control" id="name" placeholder="请输入名称"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" value="" onclick="addOrUpdate()">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
 </div>
 <div th:replace="footer :: footer">footer</div>
 <script type="text/javascript">
     var tale = new $.tale();
 
-    function showModal(id,name) {
+    function showModal(id, name) {
         $('#id').attr('value', id);
         $('#name').attr('value', name);
         $('#saveModal').modal()
@@ -107,7 +111,7 @@
             success: function (result) {
                 if (result.success) {
                     tale.alertOkAndReload('添加成功');
-                }else {
+                } else {
                     tale.alertError(result.msg);
                 }
             }
@@ -132,4 +136,5 @@
         });
     }
 </script>
+</body>
 </html>
