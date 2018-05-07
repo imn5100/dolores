@@ -16,9 +16,6 @@ public final class Constants {
     public static final String SUBSCRIBE_TOPIC = "subscribe_topic";
 
     public static String COMMON_FORMAT_STR = "yyyy-MM-dd HH:mm:ss";
-    public static DateFormat COMMON_FORMAT = new SimpleDateFormat(COMMON_FORMAT_STR);
-
     public static String DAY_FORMAT_STR = "yyyy-MM-dd";
-    public static DateFormat DAY_FORMAT = new SimpleDateFormat(DAY_FORMAT_STR);
 
 }

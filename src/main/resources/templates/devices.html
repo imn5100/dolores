@@ -41,8 +41,9 @@
                             <a href="javascript:void(0)" th:onclick="${'delPost('''+device.id+''')'}"
                                class="btn btn-danger btn-sm waves-effect waves-light m-b-5"><i
                                     class="fa fa-trash-o"></i> <span>删除</span></a>
-                            <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5"><i
-                                    class="fa fa-rocket" th:onclick="${'getToken('''+device.id+''')'}"></i>
+                            <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5"
+                               th:onclick="${'getToken('''+device.id+''')'}"><i
+                                    class="fa fa-rocket"></i>
                                 <span>获取设备连接码</span></a>
                         </td>
                     </tr>
@@ -73,8 +74,8 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
+    <div th:replace="footer :: footer">footer</div>
 </div>
-<div th:replace="footer :: footer">footer</div>
 <script type="text/javascript">
     var tale = new $.tale();
 
@@ -131,6 +132,8 @@
                 console.log(result)
                 if (result.success) {
                     alert(result.payload.token);
+                } else {
+                    tale.alertError(result.msg);
                 }
             }
         });
