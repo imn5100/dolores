@@ -54,7 +54,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/devices/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/devices/saveOrUpdate", method = RequestMethod.POST)
     @ResponseBody
     public ResponseDataholder devicesAdd(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user, String id, String deviceName) throws Exception {
         Device device;

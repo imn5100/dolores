@@ -12,7 +12,7 @@
             </div>
 
             <div class="pull-right">
-                <a href="/admin/page/new" class="btn btn-success waves-effect waves-light m-b-5">添加新设备</a>
+                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveModal">添加新设备</button>
             </div>
             <table class="table table-striped table-bordered">
                 <thead>
@@ -26,21 +26,22 @@
                 </thead>
                 <tbody>
 
-
                 <tr th:each="device,iterStat : ${devices}">
                     <th th:text="${device.id}"></th>
                     <th th:text="${device.name}"></th>
                     <th th:text="${device.user}"></th>
                     <td th:text="${device.createTime}"></td>
                     <td>
-                        <a href="" class="btn btn-primary btn-sm waves-effect waves-light m-b-5"><i
-                                class="fa fa-edit"></i> <span>编辑</span></a>
+                        <a class="btn btn-primary btn-sm waves-effect waves-light m-b-5"
+                           th:onclick="${'showModal('''+device.id+''',''' + device.name+ ''')'}">
+                            <i class="fa fa-edit"></i>
+                            <span>编辑</span></a>
                         <a href="javascript:void(0)" th:onclick="${'delPost('''+device.id+''')'}"
                            class="btn btn-danger btn-sm waves-effect waves-light m-b-5"><i
                                 class="fa fa-trash-o"></i> <span>删除</span></a>
-                        <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5" href=""
-                           target="_blank"><i
-                                class="fa fa-rocket"></i> <span>获取设备连接码</span></a>
+                        <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5"><i
+                                class="fa fa-rocket" th:onclick="${'getToken('''+device.id+''')'}"></i>
+                            <span>获取设备连接码</span></a>
                     </td>
                 </tr>
                 </tbody>
@@ -48,21 +49,85 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">添加设备</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="id"/>
+                <div class="form-group">
+                    <label for="name">名称</label>
+                    <input type="text" class="form-control" id="name" placeholder="请输入名称"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" value="" onclick="addOrUpdate()">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 <div th:replace="footer :: footer">footer</div>
 <script type="text/javascript">
     var tale = new $.tale();
 
-    function delPost(cid) {
+    function showModal(id,name) {
+        $('#id').attr('value', id);
+        $('#name').attr('value', name);
+        $('#saveModal').modal()
+    }
+
+    function delPost(id) {
         tale.alertConfirm({
-            title: '确定删除这个页面吗?',
+            title: '确定删除这个设备吗?',
             then: function () {
                 tale.post({
-                    url: '/user/device/delete',
-                    data: {cid: cid},
+                    url: '/user/devices/delete',
+                    data: {'id': id},
                     success: function (result) {
-                        tale.alertOkAndReload('页面删除成功');
+                        if (result.success) {
+                            tale.alertOkAndReload('删除成功');
+                        }
                     }
                 });
+            }
+        });
+    }
+
+    function addOrUpdate() {
+        if ($("#name").val() === '' || $("#name").val() === undefined) {
+            tale.alertError("请输入设备名称");
+        }
+        tale.post({
+            url: '/user/devices/saveOrUpdate',
+            data: {id: $("#id").val(), 'deviceName': $("#name").val()},
+            success: function (result) {
+                if (result.success) {
+                    tale.alertOkAndReload('添加成功');
+                }else {
+                    tale.alertError(result.msg);
+                }
+            }
+        });
+        $('#id').attr('value', '');
+        $('#name').attr('value', '');
+    }
+
+    function getToken(id) {
+        if (id === '' || id === undefined) {
+            tale.alertError("加载失败");
+        }
+        tale.post({
+            url: '/user/token',
+            data: {'driverId': id},
+            success: function (result) {
+                console.log(result)
+                if (result.success) {
+                    alert(result.payload.token);
+                }
             }
         });
     }

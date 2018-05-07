@@ -14,9 +14,6 @@ import java.util.Map;
 @Data
 public class Device implements Serializable {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
     private String id;
 
     private String name;
