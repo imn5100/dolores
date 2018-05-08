@@ -184,7 +184,7 @@
             tale.alertError("加载失败");
         }
         tale.post({
-            url: '/user/token',
+            url: '/user/devices/token',
             data: {'driverId': id},
             success: function (result) {
                 console.log(result);

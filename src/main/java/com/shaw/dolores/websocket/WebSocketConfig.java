@@ -1,6 +1,7 @@
 package com.shaw.dolores.websocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -18,11 +19,14 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Autowired
-    private SessionHandler sessionHandler;
-    @Autowired
     private HttpHandshakeInterceptor httpHandshakeInterceptor;
     @Autowired
     private SubscribeChannelInterceptor subscribeChannelInterceptor;
+
+    @Bean
+    public SessionHandler sessionHandler() {
+        return SessionHandler.getInstance();
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -52,6 +56,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         registration.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
             @Override
             public WebSocketHandler decorate(final WebSocketHandler handler) {
+                SessionHandler sessionHandler = sessionHandler();
                 return new WebSocketHandlerDecorator(handler) {
                     @Override
                     public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
