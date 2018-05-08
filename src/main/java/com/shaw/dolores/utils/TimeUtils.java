@@ -19,6 +19,9 @@ public class TimeUtils {
     }
 
     public static String formatDate(Date date, String format) {
+        if (date == null) {
+            return "";
+        }
         if (Utils.isEmpty(format)) {
             return new SimpleDateFormat(COMMON_FORMAT_STR).format(date);
         }

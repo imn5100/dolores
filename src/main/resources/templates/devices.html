@@ -74,15 +74,73 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
+    <div class="modal fade" id="tokenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">连接码信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">设备名称&nbsp;</label>
+                        <input type="text" class="form-control" id="deviceName" readonly="readonly" placeholder=""/>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">连接Id(SessionId)&nbsp;</label>
+                        <input type="text" class="form-control" id="sessionId" readonly="readonly" placeholder=""/>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">连接码(5分钟有效)&nbsp;<a onclick="copy('token')">点击复制</a></label>
+                        <input type="text" class="form-control" id="token" readonly="readonly" placeholder=""/>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">订阅Topic&nbsp;<a onclick="copy('topicList')">点击复制</a></label>
+                        <textarea class="form-control" id="topicList" readonly="readonly" placeholder=""></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" id="expireTime">连接后有效时长：24小时</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
     <div th:replace="footer :: footer">footer</div>
 </div>
 <script type="text/javascript">
     var tale = new $.tale();
 
+    function copy(ele) {
+        var token = document.getElementById(ele);
+        token.select()
+        document.execCommand("Copy")
+        tale.alertOk('复制成功')
+    }
+
     function showModal(id, name) {
         $('#id').attr('value', id);
         $('#name').attr('value', name);
         $('#saveModal').modal()
+    }
+
+    function showTokenModal(payload) {
+        $('#token').attr('value', payload.token);
+        var str = '';
+        payload.topicList.forEach(function (topic) {
+            if (str.length > 0) {
+                str += '<br>'
+            }
+            str += topic
+        });
+        $('#topicList').text(str);
+        $('#sessionId').attr('value', payload.sessionId);
+        $('#deviceName').attr('value', payload.deviceName);
+        $('#expireTime').text('连接可维持时长:' + (payload.expireTime / 1000.0 / 3600.0) + '小时');
+        $('#tokenModal').modal()
     }
 
     function delPost(id) {
@@ -129,9 +187,10 @@
             url: '/user/token',
             data: {'driverId': id},
             success: function (result) {
-                console.log(result)
+                console.log(result);
                 if (result.success) {
-                    alert(result.payload.token);
+                    tale.alertOk('获取成功')
+                    showTokenModal(result.payload);
                 } else {
                     tale.alertError(result.msg);
                 }

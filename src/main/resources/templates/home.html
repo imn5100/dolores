@@ -41,6 +41,22 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">已连接设备:</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <ul th:each="device,iterStat : ${deviceList}">
+                                        <li class="list-group-item">
+                                            <span th:text="'设备名：'+${device}"> device</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

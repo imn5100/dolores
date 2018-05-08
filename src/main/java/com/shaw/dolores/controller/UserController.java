@@ -50,6 +50,15 @@ public class UserController {
         return mav;
     }
 
+    @RequestMapping(value = "/connectedDevices", method = RequestMethod.GET)
+    public ModelAndView connectedDevices(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user) {
+        ModelAndView mav = new ModelAndView("connectedDevices");
+        List<SessionData> sessionDataList = sessionHandler.getSessionDataByUser(user.getId());
+        mav.addObject("active", "connectedDevices");
+        mav.addObject("deviceList", sessionDataList.stream().map(SessionData::convert2Vo).collect(Collectors.toSet()));
+        return mav;
+    }
+
     @RequestMapping(value = "/devices", method = RequestMethod.GET)
     public ModelAndView devices(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user) {
         ModelAndView mav = new ModelAndView("devices");

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:replace="header_file :: header_file">header_file</header>
+<div id="wrapper" class="fixed-left">
+    <div th:replace="header :: header">Header</div>
+    <div class="content-page">
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="page-title">已连接设备管理</h4>
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>连接SessionId</th>
+                        <th>设备id</th>
+                        <th>设备名称</th>
+                        <th>连接时间</th>
+                        <th>过期时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr th:each="device,iterStat : ${deviceList}">
+                        <th th:text="${device.sessionId}"></th>
+                        <th th:text="${device.deviceId}"></th>
+                        <th th:text="${device.deviceName}"></th>
+                        <td th:text="${device.connectTime}"></td>
+                        <td th:text="${device.expireTime}"></td>
+                        <td>
+                            <a href="javascript:void(0)" th:onclick="${'disconnect('''+device.sessionId+''')'}"
+                               class="btn btn-danger btn-sm waves-effect waves-light m-b-5"><i
+                                    class="fa fa-trash-o"></i> <span>断开连接</span></a>
+                            <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5"
+                               th:onclick="${'showModal('''+device.sessionId+''')'}"><i
+                                    class="fa fa-rocket"></i>
+                                <span>发送任务</span></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="opModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">发送任务</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" value="" id="sessionId"/>
+                    <div class="form-group">
+                        <label for="name">主题</label>
+                        <input type="text" class="form-control" id="name" placeholder="请输入名称"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">内容</label>
+                        <textarea type="text" class="form-control" id="content" placeholder="请输入内容"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" value="" onclick="send()">发送</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div th:replace="footer :: footer">footer</div>
+</div>
+<script type="text/javascript">
+    var tale = new $.tale();
+
+    function showModal(id) {
+        $('#sessionId').attr('value', sessionId);
+        $('#opModal').modal()
+    }
+
+    function disconnect(sessionId) {
+        tale.alertConfirm({
+            title: '确定断开这个设备吗?',
+            then: function () {
+                tale.post({
+                    url: '/user/devices/disconnect',
+                    data: {'sessionId': sessionId},
+                    success: function (result) {
+                        if (result.success) {
+                            tale.alertOkAndReload('断开成功');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function send() {
+        console.log($('#sessionId').val())
+    }
+</script>
+</body>
+</html>

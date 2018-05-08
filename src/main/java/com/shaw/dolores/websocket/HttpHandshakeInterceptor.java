@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import java.util.Date;
 import java.util.Map;
 
 @Component
@@ -39,6 +40,7 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
                 return false;
             } else {
                 sessionData.setExpireTime(System.currentTimeMillis() + sessionData.getExpireTime());
+                sessionData.setConnectTime(new Date());
                 attributes.put(Constants.SESSION_ID, sessionData.getSessionId());
                 attributes.put(Constants.EXPIRE_TIME, sessionData.getExpireTime());
                 attributes.put(Constants.SESSION_DATA, sessionData);
