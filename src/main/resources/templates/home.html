@@ -17,7 +17,7 @@
                             <div class="mini-stat clearfix bx-shadow bg-info">
                                 <span class="mini-stat-icon"><i class="fa fa-laptop" aria-hidden="true"></i></span>
                                 <div class="mini-stat-info text-right">
-                                    已登记设备<span class="counter">5</span>
+                                    已登记设备<span class="counter" th:text="${deviceCount}">0</span>
                                 </div>
                             </div>
                         </div>
@@ -26,7 +26,7 @@
                                 <span class="mini-stat-icon"><i class="fa fa-connectdevelop"
                                                                 aria-hidden="true"></i></span>
                                 <div class="mini-stat-info text-right">
-                                    已连接设备<span class="counter">3</span>
+                                    已连接设备<span class="counter" th:text="${connectCount}">0</span>
                                 </div>
                             </div>
                         </div>
@@ -36,50 +36,6 @@
                                 <span class="mini-stat-icon"><i class="fa fa-tasks" aria-hidden="true"></i></span>
                                 <div class="mini-stat-info text-right">
                                     执行任务数<span class="counter">30</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">连接设备:</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">
-                                            <span>设备名： apple</span>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <span>设备名： mac</span>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <span>设备名： linux pc</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">任务日志</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">
-                                            <span>xxxx年xx月xx日 启动下载：org</span>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <span>xxxx年xx月xx日 完成下载：ppt</span>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <span>xxxx年xx月xx日 完成下载：https://file.org/xxx.txt</span>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>

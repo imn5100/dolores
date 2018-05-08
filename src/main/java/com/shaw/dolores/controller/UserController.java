@@ -8,6 +8,7 @@ import com.shaw.dolores.dao.DeviceRepository;
 import com.shaw.dolores.dao.MetaRepository;
 import com.shaw.dolores.utils.*;
 import com.shaw.dolores.vo.SessionData;
+import com.shaw.dolores.websocket.SessionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -34,13 +35,18 @@ public class UserController {
     private MetaRepository metaRepository;
     @Autowired
     private DeviceRepository deviceRepository;
+    @Autowired
+    private SessionHandler sessionHandler;
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView home(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user) {
         ModelAndView mav = new ModelAndView("home");
         int deviceCount = deviceRepository.countByUserId(user.getId());
+        List<SessionData> sessionDataList = sessionHandler.getSessionDataByUser(user.getId());
         mav.addObject("active", "home");
         mav.addObject("deviceCount", deviceCount);
+        mav.addObject("connectCount", sessionDataList.size());
+        mav.addObject("deviceList", sessionDataList.stream().map(SessionData::getDeviceName).collect(Collectors.toSet()));
         return mav;
     }
 
@@ -98,13 +104,19 @@ public class UserController {
             if (metaRepository.countByOwnerAndExpireTimeAfter(user.getId(), System.currentTimeMillis()) > Constants.MAX_TOKEN) {
                 return ResponseDataholder.fail(ResponseCode.TRY_LATER);
             }
+            Device device = deviceRepository.findByIdAndUserId(driverId, user.getId());
+            if (device == null) {
+                return ResponseDataholder.fail(ResponseCode.ID_WRONG);
+            }
             SessionData sessionData = new SessionData();
             String sessionId = Utils.generateSessionId();
             String token = Utils.generateToken();
             sessionData.setToken(token);
             sessionData.setTopicList(Collections.singletonList(Utils.buildSubscribeUrl(subPrefix, driverId, user.getId())));
             sessionData.setSessionId(sessionId);
-            sessionData.setUserName(user.getName());
+            sessionData.setUserId(user.getId());
+            sessionData.setDeviceId(device.getId());
+            sessionData.setDeviceName(device.getName());
             Meta meta = Meta.of(token, JSON.toJSONString(sessionData), user.getId(), 5, TimeUnit.MINUTES);
             metaRepository.save(meta);
             return ResponseDataholder.success(sessionData);

@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script type="text/javascript">
         var stompClient = null;
-        var driverId = "afbce32ab4"
+        var driverId = "012446de93c16d4eed5297de68fcc237ebd1fbc417997970"
 
         function setConnected(connected) {
             document.getElementById('connect').disabled = connected;
@@ -17,12 +17,13 @@
         }
 
         function connect() {
-            var socket = new SockJS('http://wst.shawblog.me/dolores?token=' + getToken());
+            driverId = $('#name').val();
+            var socket = new SockJS('http://wst.shawblog.me/dolores?token=' + getToken(driverId));
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/dolores/driver/' + driverId, function (greeting) {
+                stompClient.subscribe('/dolores/driver/1/' + driverId, function (greeting) {
                     showGreeting(greeting);
                 });
 
@@ -30,14 +31,14 @@
         }
 
 
-        function getToken() {
+        function getToken(driverId) {
             var token = '';
             $.ajax({
                 url: "http://wst.shawblog.me/user/token",
                 dataType: 'json',
                 type: 'post',
                 data: {
-                    "driverId": driverId,
+                    "driverId": driverId
                 },
                 async: false,
                 success: function (data) {

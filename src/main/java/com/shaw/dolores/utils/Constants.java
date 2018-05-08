@@ -10,7 +10,7 @@ public final class Constants {
 
     public static final String HTTP_SESSION_USER = "http_session_user";
     public static final long DEFAULT_EXPIRE_TIME = 1000 * 60 * 60 * 4;
-    public static final String TOKEN_DATA = "tokenData";
+    public static final String SESSION_DATA = "tokenData";
     public static final String SESSION_ID = "sessionId";
     public static final String EXPIRE_TIME = "expireTime";
     public static final String SUBSCRIBE_TOPIC = "subscribe_topic";

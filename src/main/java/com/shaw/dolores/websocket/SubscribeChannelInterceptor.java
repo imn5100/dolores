@@ -19,7 +19,7 @@ public class SubscribeChannelInterceptor extends ChannelInterceptorAdapter {
     public Message<?> preSend(Message message, MessageChannel channel) throws IllegalArgumentException {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
-            SessionData sessionData = (SessionData) headerAccessor.getSessionAttributes().get(Constants.TOKEN_DATA);
+            SessionData sessionData = (SessionData) headerAccessor.getSessionAttributes().get(Constants.SESSION_DATA);
             if (sessionData == null
                     || CollectionUtils.isEmpty(sessionData.getTopicList())
                     || !Utils.topicValidity(sessionData.getTopicList(), headerAccessor.getDestination())) {

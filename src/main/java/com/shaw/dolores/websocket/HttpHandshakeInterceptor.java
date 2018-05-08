@@ -41,7 +41,7 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
                 sessionData.setExpireTime(System.currentTimeMillis() + sessionData.getExpireTime());
                 attributes.put(Constants.SESSION_ID, sessionData.getSessionId());
                 attributes.put(Constants.EXPIRE_TIME, sessionData.getExpireTime());
-                attributes.put(Constants.TOKEN_DATA, sessionData);
+                attributes.put(Constants.SESSION_DATA, sessionData);
             }
         }
         return true;
