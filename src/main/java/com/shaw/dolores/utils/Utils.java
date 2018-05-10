@@ -9,7 +9,7 @@ import java.security.MessageDigest;
 import java.util.Collection;
 
 public final class Utils {
-    private static final PathMatcher pathMatcher = new AntPathMatcher();
+    public static final PathMatcher pathMatcher = new AntPathMatcher();
 
     public static String generateToken() {
         return md5(String.valueOf(GidUtil.next()));

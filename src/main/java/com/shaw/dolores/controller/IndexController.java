@@ -23,9 +23,6 @@ public class IndexController {
     @Value("${dolores.gitHub.client_id}")
     private String GITHUB_CLIENT_ID;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @RequestMapping(value = "/login")
     @OAuthPassport
     public ModelAndView loginPage(HttpSession session) {
@@ -33,7 +30,6 @@ public class IndexController {
         if (user != null && user.getId() != null) {
             return new ModelAndView("redirect:" + "/user/home");
         }
-        session.setAttribute(Constants.HTTP_SESSION_USER, userRepository.findOne(1));
         return new ModelAndView("login");
     }
 

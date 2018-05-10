@@ -2,6 +2,7 @@ package com.shaw.dolores.interceptor;
 
 import com.shaw.dolores.bo.User;
 import com.shaw.dolores.utils.Constants;
+import com.shaw.dolores.utils.Utils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -11,14 +12,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SecurityFilter implements Filter {
-    private static final Set<String> NO_LOGIN_PAGE = new HashSet<>();
+    private static final Set<String> LOGIN_PAGE = new HashSet<>();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        NO_LOGIN_PAGE.add("/login");
-        NO_LOGIN_PAGE.add("/logout");
-        NO_LOGIN_PAGE.add("/index");
-        NO_LOGIN_PAGE.add("/fromGithub");
+        LOGIN_PAGE.add("/user/**");
     }
 
     @Override
@@ -26,7 +24,7 @@ public class SecurityFilter implements Filter {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
         String uri = servletRequest.getRequestURI();
-        if (!NO_LOGIN_PAGE.contains(uri) && !isResourceFile(uri)) {
+        if (matchLoginPage(uri) && !isResourceFile(uri)) {
             User user = (User) servletRequest.getSession().getAttribute(Constants.HTTP_SESSION_USER);
             if (user == null) {
                 servletResponse.sendRedirect("/login");
@@ -39,6 +37,10 @@ public class SecurityFilter implements Filter {
     @Override
     public void destroy() {
         //do nothing
+    }
+
+    private boolean matchLoginPage(String url) {
+        return LOGIN_PAGE.stream().anyMatch(page -> Utils.pathMatcher.match(page, url));
     }
 
     private boolean isResourceFile(String url) {
