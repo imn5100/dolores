@@ -95,8 +95,12 @@ public class SessionHandler {
     void removeSessionData(WebSocketSession session) {
         if (session != null && session.getAttributes().containsKey(Constants.SESSION_ID)) {
             String sessionId = (String) session.getAttributes().get(Constants.SESSION_ID);
-            sessionMap.remove(sessionId);
-            queue.remove(session);
+            if(sessionMap.remove(sessionId)!=null){
+                LOGGER.info(sessionId + " remove from sessionMap");
+            }
+            if(queue.remove(session)){
+                LOGGER.info(sessionId + " remove from sessionQueue");
+            }
             removeUseSessionData(session);
         }
     }

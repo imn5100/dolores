@@ -62,7 +62,7 @@ public final class Utils {
     }
 
     public static String buildSubscribeUrl(String subPrefix, String driverId, int userId) {
-        return subPrefix + userId + "/" + driverId;
+        return subPrefix + "/" + driverId;
     }
 
 }

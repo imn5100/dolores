@@ -23,7 +23,7 @@
             stompClient.connect({}, function (frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/dolores/driver/1/' + driverId, function (greeting) {
+                stompClient.subscribe('/dolores/driver/' + driverId, function (greeting) {
                     showGreeting(greeting);
                 });
 

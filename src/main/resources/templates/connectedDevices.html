@@ -90,8 +90,10 @@
                     url: '/user/devices/disconnect',
                     data: {'sessionId': sessionId},
                     success: function (result) {
-                        if (result.success) {
+                        if (result.success && result.code === 200) {
                             tale.alertOkAndReload('断开成功');
+                        }else {
+                            tale.alertError(result.msg)
                         }
                     }
                 });
