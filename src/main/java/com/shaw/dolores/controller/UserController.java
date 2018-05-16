@@ -60,6 +60,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("devices");
         List<Device> devices = deviceRepository.findAllByUserId(user.getId());
         mav.addObject("active", "devices");
+        mav.addObject("tokenExpire", Constants.TOKEN_EXPIRE_TIME_MIN);
         mav.addObject("devices", devices.stream().map(device -> device.convertToVo(user)).collect(Collectors.toList()));
         return mav;
     }

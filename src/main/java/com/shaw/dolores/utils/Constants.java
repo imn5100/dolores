@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 
 public final class Constants {
     public static final String SUBSCRIBE_SET_REDIS_KEY = "web-push:subscribe_hash";
-    public static final int TOKEN_EXPIRE_TIME_MIN = 5;
+    public static final int TOKEN_EXPIRE_TIME_MIN = 30;
     public static final int MAX_TOKEN = 10;
 
     public static final String HTTP_SESSION_USER = "http_session_user";

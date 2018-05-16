@@ -92,7 +92,7 @@ public class DeviceController {
             sessionData.setUserId(user.getId());
             sessionData.setDeviceId(device.getId());
             sessionData.setDeviceName(device.getName());
-            Meta meta = Meta.of(token, JSON.toJSONString(sessionData), user.getId(), 5, TimeUnit.MINUTES);
+            Meta meta = Meta.of(token, JSON.toJSONString(sessionData), user.getId(), Constants.TOKEN_EXPIRE_TIME_MIN, TimeUnit.MINUTES);
             metaRepository.save(meta);
             return ResponseDataholder.success(sessionData);
         }
@@ -130,7 +130,9 @@ public class DeviceController {
                         task.setStatus(Task.STATUS_SEND);
                     }
                     taskRepository.save(task);
-                    messagingTemplate.convertAndSend(Utils.buildSubscribeUrl(subPrefix, sessionData.getDeviceId()), JSON.toJSONString(task));
+                    sessionData.getTopicList().forEach(
+                            subTopic -> messagingTemplate.convertAndSend(subTopic, JSON.toJSONString(task))
+                    );
                     return ResponseDataholder.success();
                 } else {
                     return ResponseDataholder.fail(ResponseCode.PARAM_NOT_FORMAT);

@@ -15,6 +15,7 @@ public class Task implements Serializable {
     public static final String TOPIC_PYTHON_SCRIPT = "python";
     public static final int STATUS_INIT = 0;
     public static final int STATUS_SEND = 1;
+    public static final int STATUS_FAIL = 2;
 
     public static final HashSet<String> TOPIC_SET = new HashSet<>(Arrays.asList(TOPIC_DOWNLOAD, TOPIC_PYTHON_SCRIPT));
     @Id

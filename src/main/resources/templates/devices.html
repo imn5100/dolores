@@ -92,7 +92,8 @@
                         <input type="text" class="form-control" id="sessionId" readonly="readonly" placeholder=""/>
                     </div>
                     <div class="form-group">
-                        <label for="name">连接码(5分钟有效)&nbsp;<a onclick="copy('token')">点击复制</a></label>
+                        <label for="name"><t th:text="'连接码('+${tokenExpire}+'分钟有效)'"></t>&nbsp;<a
+                                onclick="copy('token')">点击复制</a></label>
                         <input type="text" class="form-control" id="token" readonly="readonly" placeholder=""/>
                     </div>
                     <div class="form-group">

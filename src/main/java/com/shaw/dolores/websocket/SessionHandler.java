@@ -6,6 +6,7 @@ import com.shaw.dolores.vo.SessionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class SessionHandler {
     private final Queue<WebSocketSession> queue = new PriorityBlockingQueue<>(10, (o1, o2) -> (int) (Utils.parseLongQuietly(o1.getAttributes().get(Constants.EXPIRE_TIME), 0) - Utils.parseLongQuietly(o2.getAttributes().get(Constants.EXPIRE_TIME), 0)));
     private final Map<Integer, List<SessionData>> useSessionMap = new ConcurrentHashMap<>();
     private static final SessionHandler INSTANCE = new SessionHandler();
+
     public static SessionHandler getInstance() {
         return INSTANCE;
     }
@@ -55,6 +57,19 @@ public class SessionHandler {
             return (SessionData) webSocketSession.getAttributes().get(Constants.SESSION_DATA);
         }
         return null;
+    }
+
+    public boolean sendMessage(String sessionId, String message) {
+        WebSocketSession webSocketSession = sessionMap.get(sessionId);
+        if (webSocketSession != null) {
+            try {
+                webSocketSession.sendMessage(new TextMessage(message));
+                return true;
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
+        return false;
     }
 
     public List<SessionData> getSessionDataByUser(int userId) {
@@ -95,10 +110,10 @@ public class SessionHandler {
     void removeSessionData(WebSocketSession session) {
         if (session != null && session.getAttributes().containsKey(Constants.SESSION_ID)) {
             String sessionId = (String) session.getAttributes().get(Constants.SESSION_ID);
-            if(sessionMap.remove(sessionId)!=null){
+            if (sessionMap.remove(sessionId) != null) {
                 LOGGER.info(sessionId + " remove from sessionMap");
             }
-            if(queue.remove(session)){
+            if (queue.remove(session)) {
                 LOGGER.info(sessionId + " remove from sessionQueue");
             }
             removeUseSessionData(session);
