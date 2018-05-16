@@ -57,12 +57,21 @@
                 <div class="modal-body">
                     <input type="hidden" value="" id="sessionId"/>
                     <div class="form-group">
-                        <label for="name">主题</label>
-                        <input type="text" class="form-control" id="name" placeholder="请输入名称"/>
+                        <label for="topic">是否保存任务记录</label>
+                        <input id="saveDB" type="checkbox" checked="checked"/>
                     </div>
                     <div class="form-group">
-                        <label for="name">内容</label>
-                        <textarea type="text" class="form-control" id="content" placeholder="请输入内容"></textarea>
+                        <label for="topic">主题</label>
+                        <select id="topic">
+                            <each th:each="topic,iter:${topicList}">
+                                <option th:value="${topic}" th:text="${topic}"></option>
+                            </each>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">内容</label>
+                        <textarea type="text" class="form-control" id="content" placeholder="请输入内容"
+                                  rows="10"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -78,7 +87,7 @@
     var tale = new $.tale();
 
     function showModal(id) {
-        $('#sessionId').attr('value', sessionId);
+        $('#sessionId').attr('value', id);
         $('#opModal').modal()
     }
 
@@ -92,7 +101,7 @@
                     success: function (result) {
                         if (result.success && result.code === 200) {
                             tale.alertOkAndReload('断开成功');
-                        }else {
+                        } else {
                             tale.alertError(result.msg)
                         }
                     }
@@ -102,7 +111,35 @@
     }
 
     function send() {
-        console.log($('#sessionId').val())
+        var sessionId = $("#sessionId").val();
+        var content = $("#content").val();
+        var topic = $("#topic").val();
+        var saveInDb = !!document.getElementById("saveDB").checked;
+        if (tale.isEmpty(content) || tale.isEmpty(topic)) {
+            tale.alertError("请输入任务内容");
+            return;
+        }
+        tale.alertConfirm({
+            title: '本任务将直接发送到该设备上，是否立即发送?',
+            then: function () {
+                tale.post({
+                    url: '/user/devices/sendTask',
+                    data: {
+                        'sessionId': sessionId,
+                        'content': content,
+                        'topic': topic,
+                        'saveInDb': saveInDb
+                    },
+                    success: function (result) {
+                        if (result.success && result.code === 200) {
+                            tale.alertOkAndReload('发送成功');
+                        } else {
+                            tale.alertError(result.msg)
+                        }
+                    }
+                });
+            }
+        });
     }
 </script>
 </body>

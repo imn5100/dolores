@@ -18,7 +18,7 @@ $.extend({
  * @param options
  */
 $.tale.prototype.alertOk = function (options) {
-    options = options.length ? {text: options} : ( options || {} );
+    options = options.length ? {text: options} : (options || {});
     options.title = options.title || '操作成功';
     options.text = options.text;
     options.showCancelButton = false;
@@ -46,7 +46,7 @@ $.tale.prototype.alertOkAndReload = function (text) {
  * @param options
  */
 $.tale.prototype.alertWarn = function (options) {
-    options = options.length ? {text: options} : ( options || {} );
+    options = options.length ? {text: options} : (options || {});
     options.title = options.title || '警告信息';
     options.text = options.text;
     options.timer = 3000;
@@ -72,7 +72,7 @@ $.tale.prototype.alertConfirm = function (options) {
  * @param options
  */
 $.tale.prototype.alertError = function (options) {
-    options = options.length ? {text: options} : ( options || {} );
+    options = options.length ? {text: options} : (options || {});
     options.title = options.title || '错误信息';
     options.text = options.text;
     options.type = 'error';
@@ -139,5 +139,12 @@ $.tale.prototype.showLoading = function () {
  */
 $.tale.prototype.hideLoading = function () {
     $('#tale-loading') && $('#tale-loading').hide();
+};
+
+/**
+ *  empty
+ */
+$.tale.prototype.isEmpty = function (str) {
+    return (str === undefined || str.trim() === '')
 };
 

@@ -42,5 +42,19 @@ create table device
   unique (id)
 );
 
+DROP TABLE IF EXISTS task;
+CREATE TABLE task
+(
+    id INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    topic varchar(32) DEFAULT '' NOT NULL,
+    contents text null ,
+    owner int DEFAULT 0 NOT NULL,
+    remark varchar(500) DEFAULT '' not null ,
+    status int DEFAULT 0 NOT NULL,
+    session_id varchar(64) DEFAULT '' NOT NULL,
+    create_time bigint DEFAULT 0 NOT NULL,
+    update_time bigint DEFAULT 0 NOT NULL
+);
+
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

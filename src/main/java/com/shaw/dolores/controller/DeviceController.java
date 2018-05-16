@@ -3,15 +3,21 @@ package com.shaw.dolores.controller;
 import com.alibaba.fastjson.JSON;
 import com.shaw.dolores.bo.Device;
 import com.shaw.dolores.bo.Meta;
+import com.shaw.dolores.bo.Task;
 import com.shaw.dolores.bo.User;
 import com.shaw.dolores.dao.DeviceRepository;
 import com.shaw.dolores.dao.MetaRepository;
+import com.shaw.dolores.dao.TaskRepository;
 import com.shaw.dolores.utils.*;
 import com.shaw.dolores.vo.SessionData;
 import com.shaw.dolores.websocket.SessionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +33,10 @@ public class DeviceController {
     private DeviceRepository deviceRepository;
     @Autowired
     private SessionHandler sessionHandler;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private TaskRepository taskRepository;
 
     @RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
     public ResponseDataholder devicesAdd(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user, String id, String deviceName) throws Exception {
@@ -77,7 +87,7 @@ public class DeviceController {
             String sessionId = Utils.generateSessionId();
             String token = Utils.generateToken();
             sessionData.setToken(token);
-            sessionData.setTopicList(Collections.singletonList(Utils.buildSubscribeUrl(subPrefix, driverId, user.getId())));
+            sessionData.setTopicList(Collections.singletonList(Utils.buildSubscribeUrl(subPrefix, driverId)));
             sessionData.setSessionId(sessionId);
             sessionData.setUserId(user.getId());
             sessionData.setDeviceId(device.getId());
@@ -99,6 +109,34 @@ public class DeviceController {
             } else {
                 return ResponseDataholder.fail("未找到相关连接信息");
             }
+        }
+        return ResponseDataholder.fail(ResponseCode.NOT_LOGIN);
+    }
+
+    @RequestMapping(value = "/sendTask", method = RequestMethod.POST)
+    public ResponseDataholder sendTask(@SessionAttribute(name = Constants.HTTP_SESSION_USER) User user, String sessionId, String content, String topic, boolean saveInDb) {
+        if (user != null && user.getId() != null && Utils.isNotEmpty(sessionId)) {
+            SessionData sessionData = sessionHandler.getSessionData(sessionId);
+            if (sessionData != null && sessionData.getUserId() == user.getId()) {
+                if (Utils.isNotEmpty(content) && Task.TOPIC_SET.contains(topic)) {
+                    Task task = new Task();
+                    task.setContents(content);
+                    task.setTopic(topic);
+                    if (saveInDb) {
+                        task.setOwner(user.getId());
+                        task.setSessionId(sessionId);
+                        task.setCreateTime(System.currentTimeMillis());
+                        task.setUpdateTime(System.currentTimeMillis());
+                        task.setStatus(Task.STATUS_SEND);
+                    }
+                    taskRepository.save(task);
+                    messagingTemplate.convertAndSend(Utils.buildSubscribeUrl(subPrefix, sessionData.getDeviceId()), JSON.toJSONString(task));
+                    return ResponseDataholder.success();
+                } else {
+                    return ResponseDataholder.fail(ResponseCode.PARAM_NOT_FORMAT);
+                }
+            }
+            return ResponseDataholder.fail("未找到相关连接信息");
         }
         return ResponseDataholder.fail(ResponseCode.NOT_LOGIN);
     }

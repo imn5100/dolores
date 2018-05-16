@@ -61,7 +61,7 @@ public final class Utils {
         return !StringUtils.isEmpty(topic) && !CollectionUtils.isEmpty(topicWhitelists) && topicWhitelists.stream().anyMatch(pattern -> pathMatcher.match(pattern, topic));
     }
 
-    public static String buildSubscribeUrl(String subPrefix, String driverId, int userId) {
+    public static String buildSubscribeUrl(String subPrefix, String driverId) {
         return subPrefix + "/" + driverId;
     }
 
