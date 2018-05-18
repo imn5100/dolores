@@ -50,7 +50,7 @@ CREATE TABLE task
     contents text null ,
     owner int DEFAULT 0 NOT NULL,
     remark varchar(500) DEFAULT '' not null ,
-    status int DEFAULT 0 NOT NULL,
+    status tinyint DEFAULT 0 NOT NULL,
     session_id varchar(64) DEFAULT '' NOT NULL,
     create_time bigint DEFAULT 0 NOT NULL,
     update_time bigint DEFAULT 0 NOT NULL

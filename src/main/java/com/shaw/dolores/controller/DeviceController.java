@@ -128,8 +128,8 @@ public class DeviceController {
                         task.setCreateTime(System.currentTimeMillis());
                         task.setUpdateTime(System.currentTimeMillis());
                         task.setStatus(Task.STATUS_SEND);
+                        taskRepository.save(task);
                     }
-                    taskRepository.save(task);
                     sessionData.getTopicList().forEach(
                             subTopic -> messagingTemplate.convertAndSend(subTopic, JSON.toJSONString(task))
                     );
